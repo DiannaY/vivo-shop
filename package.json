@@ -1,8 +1,8 @@
 {
-  "name": "vivo-shop",
+  "name": "apptwo",
   "version": "1.0.0",
   "description": "A Vue.js project",
-  "author": " <2421981682@qq.com>",
+  "author": "Mynameisfwk <2239657654@qq.com>",
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",
@@ -24,6 +24,7 @@
     "vux": "^2.7.2"
   },
   "devDependencies": {
+    "ansi-styles": "^3.2.1",
     "autoprefixer": "^7.1.2",
     "babel-core": "^6.22.1",
     "babel-loader": "^7.1.1",
@@ -70,11 +71,5 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ],
-  "main": ".postcssrc.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/DiannaY"
-  },
-  "license": "ISC"
+  ]
 }
