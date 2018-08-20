@@ -18,8 +18,9 @@ import MyCollection from '@/pages/my/MyCollection'
 import classify from "@/pages/classify/classify"
 import OrderDetails from "@/pages/OrderDetails"
 import pay from "@/pages/pay/pay"
-import address from "@/pages/address"
-import add_address from "@/pages/add_address"
+import address from "@/pages/address/address"
+import add_address from "@/pages/address/add_address"
+import change_address from "@/pages/address/change_address"
 Vue.use(Router)
 
 export default new Router({
@@ -72,6 +73,11 @@ export default new Router({
       path: '/add_address',
       name:'add_address',
       component:add_address
+    },
+    {
+      path:'/change_address',
+      name : '/change_address',
+      component : change_address
     }
   ],
   //路由切换页面始终回到最顶部

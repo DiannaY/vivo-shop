@@ -1,6 +1,6 @@
 <template>
   <div >
-    <News-Header></News-Header>
+    <News-Header title="资讯动态"></News-Header>
     <News-Container :NewsContainer="NewsContainer"></News-Container>
     <News-Footer></News-Footer>
         
@@ -9,7 +9,7 @@
 
 <script>
 import axios from 'axios';
-import NewsHeader from '../../pages/News/component/NewsHeader'
+import NewsHeader from '../../common/header'
 import NewsContainer from '../../pages/News/component/NewsContainer'
 import NewsFooter from '../../pages/footer'
 export default {

@@ -5,12 +5,10 @@
              <ul>
                 <li v-for="(cart,index) in carts" class="cartList" :key="index">
                      <!-- 购物车单选 -->
-                     <div class="select" @click="danxuan(cart)" >
-                        <i class="iconfont icon-xuanzekuangmoren"   v-show="!cart.danx1uan"></i>
+                     <div class="select" @click="chooseone(cart)" >
+                        <i class="iconfont icon-xuanzekuangmoren" v-show="!cart.danx1uan"></i>
                         <i class="iconfont icon-xuanzekuangxuanzhong" v-show="cart.danx1uan" style="color:#25b5fe"></i>
                     </div>
-                   
-
                     <!-- 购物车商品信息 -->
                      <div class="cartImage">
                         <img :src="cart.img" >
@@ -27,14 +25,10 @@
                         <a @click.stop="reduce(index)" class="add">-</a>
                         <input type="text"   v-model="cart.value" readonly="readonly"/>
                         <a @click.stop="add(index)" class="reduce">+</a>
-                    </div>
-
-                    
+                    </div>   
                 </li>
             </ul>
         </div>
-         
-
         <div class="cartImg" v-if="!carts.length">
             <img src="/static/img/gouwuche.png" alt="购物车图片">
             <h1>购物车是空的哦，快去购物吧</h1>
@@ -50,7 +44,7 @@
             <div class="Total">合计：<span style="font-size: 0.54rem;color:#E3211E">￥{{sum}}</span></div>
            
                 <div class="Settlement">
-                    <a href="javascript:void(0);" @click="settlement">结算 {{sumValue}}</a>
+                    <a @click.stop="goPay">结算 {{sumValue}}</a>
                 </div>
                 <!-- <div class="Settlementtwo">
                     <router-link :to="{name:'Home'}" >继续购物</router-link>
@@ -61,14 +55,14 @@
     </div>
 </template>
 <script>
-import { Toast } from "mint-ui";
+import { Toast,MessageBox } from "mint-ui";
 import { mapState, mapMutations, mapGetters } from "vuex";
 import CartHeader from '../../common/header'
 export default {
   name: "cart",
   data() {
     return {
-      qx: false
+      qx: false,
     };
   },
   components: {
@@ -78,7 +72,6 @@ export default {
     carts() {
       return this.$store.state.carts;
     },
-    ...mapGetters(["this.$store.state.carts"]),
     sum: function() {
       var sum = 0;
       this.$store.state.carts.forEach(cart => {
@@ -101,14 +94,19 @@ export default {
   methods: {
     ...mapMutations(["shanchu", "add", "reduce", "settlement"]),
 
-    danxuan(cart) {
-      console.log(cart);
+    chooseone(cart) {
       cart.danx1uan = !cart.danx1uan;
-      if (!cart.danx1uan) {
-        this.qx = false;
+      for (var i = 0 ;i < this.carts.length;i ++) {
+        if (this.carts[i].danx1uan == false) {
+          this.qx = false;
+          break;
+        }else {
+          this.qx = true;
+        }
       }
     },
     quanxuan() {
+      console.log((this.$store.state.carts));
       this.qx = !this.qx;
       if (this.qx) {
         this.$store.state.carts.forEach(cart => {
@@ -119,6 +117,26 @@ export default {
           cart.danx1uan = false;
         });
       }
+    },
+    goPay() {
+      this.$store.state.payGoods = [];
+      if (this.sumValue == 0) {
+          MessageBox('提示','请选择至少一个商品!')
+      }else {
+         this.$router.push({
+          path:'pay',
+        })
+      };
+    }
+  },
+  created() {
+    for (var i = 0 ;i < this.carts.length;i ++) {
+        if (this.carts[i].danx1uan == false) {
+          this.qx = false;
+          break;
+        }else {
+          this.qx = true;
+        }
     }
   }
 };

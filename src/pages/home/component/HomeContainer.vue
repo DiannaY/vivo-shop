@@ -28,7 +28,6 @@ export default {
   },
   methods: {
     open: function(id) {
-      console.log(this.todo)
       this.$router.push({ path: "goodDetail", query: { id: id } });
     }
   }

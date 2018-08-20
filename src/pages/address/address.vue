@@ -6,7 +6,7 @@
                 <p class="left">配送地址</p>
                 <p class="right" @click="goAdd_address">+添加地址</p>
             </div>
-            <div class="pay-address" v-for="(list,index) in address" :key="index" :class="{active:index===$store.state.nowIndex}" @click="btn(list,index)">
+            <div class="pay-address" v-for="(list,index) in address" :key="index" :class="{active:index===$store.state.nowIndex}">
                 <p class="address-box">
                     <span class="name">收货人：{{list.name}}</span>
                     <span class="phone">{{list.phone}}</span>
@@ -14,7 +14,7 @@
                 <p class="address-details">收货地址：{{list.zone}}{{list.detail}}</p>
                 <div class="address-operation">
                     <p class="address-operation-box">
-                        <i class="iconfont icon-bianji"></i>
+                        <i class="iconfont icon-bianji" @click="writeAddress(index)"></i>
                         <i class="iconfont icon-lajitong" @click="laji(index)"></i>
                     </p>
                 </div>
@@ -25,14 +25,14 @@
 
 
 <script>
-import AddressHeader from "../common/header";
+import AddressHeader from "../../common/header";
 import { mapState, mapMutations, mapGetters } from "vuex";
 export default {
-    data(){
-        return{
-            nowIndex:0
-        }
-    },
+    // data(){
+    //     return{
+    //         nowIndex:0
+    //     }
+    // },
     components: {
         AddressHeader
     },
@@ -40,10 +40,10 @@ export default {
         address() {
         return this.$store.state.address;
         },
-        ...mapGetters(
-            ["this.$store.state.address"],
-            ["this.$store.state.nowIndex"]
-        )
+        // ...mapGetters(
+        //     ["this.$store.state.address"],
+        //     ["this.$store.state.nowIndex"]
+        // )
     },
     methods: {
         ...mapMutations(["laji"]),
@@ -51,6 +51,14 @@ export default {
             this.$router.push({
                 path: "add_address"
             });
+        },
+        writeAddress(index) {
+            this.$router.push({
+                path : 'change_address',
+                query : {
+                    index:index
+                }
+            })
         }
     }
 };

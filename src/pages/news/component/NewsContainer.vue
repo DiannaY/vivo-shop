@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <div class="container-box" v-for="(list,index) in NewsContainer" @click="goNewsDetail(list.id)">
+        <div class="container-box" v-for="(list,index) in NewsContainer" :key="index" @click="goNewsDetail(list.id)">
             <div class="container-title">
                 {{list.newsTitle}}
             </div>
@@ -11,7 +11,7 @@
                 {{list.newsCon}}
             </div>
             <div class="container-time">
-                发布日期 2018-4-18
+                {{list.newsTime}}
             </div>
         </div>
        

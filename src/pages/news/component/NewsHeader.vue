@@ -1,12 +1,16 @@
 <template>
   <div class="header">
+
       <div>资讯动态</div>
   </div>
 </template>
 
 <script>
+import newsHeader from ;
 export default {
-  
+  components : {
+
+  }
 }
 </script>
 

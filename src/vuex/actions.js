@@ -9,8 +9,8 @@ const actions={
         commit('SET_ARTICLE',data)
     },
     //商品收藏
-    setGoods({commit},data){
-        commit('SET_GOODS',data)
+    setCollections({commit},data){
+        commit('SET_COLLECTIONS',data)
     },
     //地址
     setAddress({commit},data){
@@ -19,6 +19,10 @@ const actions={
     //订单
     setOrders({commit},data){
         commit('SET_ORDERS',data)
+    },
+    // 支付商品
+    setPayGoods({commit},data) {
+        commit('SET_PAYGOODS',data)
     }
 }
 

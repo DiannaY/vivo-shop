@@ -4,7 +4,7 @@
         <i class="iconfont icon-zuojiantou"></i>
      </div>
      <div class="in">{{title}}</div>
-     <div class="rigth"></div>
+   
   </div>
 </template>
 

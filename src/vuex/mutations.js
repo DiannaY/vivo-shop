@@ -8,13 +8,15 @@ const matutaions={
         state.carts.push(data)
         localStorage.setItem("carts",JSON.stringify(state.carts));
     },
+    // 支付商品
+    
     //文章
     [type.SET_ARTICLE](state,data){
         state.article.push(data)
         localStorage.setItem("article",JSON.stringify(state.article));
     },
     //商品
-    [type.SET_GOODS](state,data){
+    [type.SET_COLLECTIONS](state,data){
         state.collections.push(data)
         localStorage.setItem("collections",JSON.stringify(state.collections));
     },
@@ -23,10 +25,15 @@ const matutaions={
         state.orders.push(data)
         localStorage.setItem("orders",JSON.stringify(state.orders));
     },
-    //地址
-    [type.SET_ADDRESS](state,data){
+    //添加地址
+    [type.SET_ADDRESS](state,data,index){ 
         state.address.push(data)
         localStorage.setItem("address",JSON.stringify(state.address));
+    },
+    //支付商品
+    [type.SET_PAYGOODS](state,data){
+        state.address.push(data)
+        localStorage.setItem("payGoods",JSON.stringify(state.payGoods));
     },
     //文章删除
     del:(state,index)=>{
@@ -42,6 +49,7 @@ const matutaions={
             localStorage.setItem("collections",JSON.stringify(state.collections));
         })
     },
+    // 删除收货地址
     laji:(state,index)=>{
         MessageBox.confirm('确定删除收货地址么？').then(action=>{
             state.address.splice(index,1)
@@ -58,7 +66,7 @@ const matutaions={
     //订单删除
     odefault:(state,index)=>{
         MessageBox.confirm('确定删除该订单么？').then(action=>{
-            state.orders.splice(index,1)
+            state.orders.splice(state.orders.length-index-1,1)
             localStorage.setItem("orders",JSON.stringify(state.orders));
         })
     },
@@ -74,6 +82,8 @@ const matutaions={
     },
 
     settlement:(state,data)=>{
+        console.log(this.$router)
+        this.$router.push({path:'pay'})
         state.carts=[];
         localStorage.setItem("carts",JSON.stringify(state.carts));
     },

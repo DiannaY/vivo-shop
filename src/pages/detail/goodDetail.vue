@@ -25,9 +25,9 @@
                     <div class="goodDetailValue">
                         <div class="_Value">购买数量：</div>
                         <div class="_cartNumber" style="margin-left: 2rem;">
-                            <a href="javascript:;" @click="jian(index)" class="goodDetailReduce">-</a>
+                            <a @click.stop="subSum(index)" class="goodDetailReduce">-</a>
                             <input type="text"   v-model="goodDetail.homeValue" readonly="readonly"/>
-                            <a href="javascript:;" @click="jia(index)" class="goodDetailAdd">+</a>
+                            <a @click.stop="addSum(index)" class="goodDetailAdd">+</a>
                         </div>
                     </div>
 
@@ -43,7 +43,7 @@
                         <mt-tab-container v-model="selected" swipeable>
                             <mt-tab-container-item id="tab-container1">
                                <div class="goodDetailImg">
-                                   <p v-for="Image in goodDetail.Images">
+                                   <p v-for="(Image,index) in goodDetail.Images" :key="index">
                                        <img v-bind:src="Image.one" alt="详情图片">
                                     </p>
                                 </div>
@@ -59,17 +59,17 @@
 
                     <div class="goodDetailFooter">
                         <div class="left">
-                            <div class="cart">
+                            <div class="cart" @click="goCart">
                                 <div class="cartlength">{{cartlength}}</div>
                                 <img src="http://p6563v2ck.bkt.clouddn.com/%E8%B4%AD%E7%89%A9%E8%BD%A6.png" >
                                 <span>购物车</span>
                             </div>
                             <div class="collection" >
-                                <div class="collection-box" @click="addCollection(goodDetail)"  v-show="!$store.state.ces">
+                                <div class="collection-box" @click="addCollection(goodDetail,index)"  v-if="!isCol">
                                     <i class="iconfont icon-collection"></i>
                                     <span>收藏</span>
                                 </div>
-                                <div class="collection-box" @click="addCollection(goodDetail)"  v-show="$store.state.ces">
+                                <div class="collection-box" @click="addCollection(goodDetail,index)"  v-if="isCol">
                                     <i class="iconfont icon-shoucangxuanzhong1" style="color:red"></i>
                                     <span style="color:red">取消</span>
                                 </div>
@@ -83,13 +83,12 @@
                         </div>
                         <div class="rigth">
                             <div class="add">
-                                <a href="javascript:void(0);" @click="add(goodDetail)">加入购物车</a>
+                                <a @click.stop="add(goodDetail)">加入购物车</a>
                             </div>
                             <div class="purchase">
-                                <a href="javascript:void(0);" @click="pay(goodDetail.id,goodDetail.homeValue)">提交订单</a>
+                                <a @click.stop="pay(goodDetail,index)">立即购买</a>
                             </div>
                         </div>
-                       
                     </div>
                     
                 </li>
@@ -112,7 +111,9 @@ export default {
       goodDetailHeader: "商品详情",
       selected: "tab-container1",
       goodDetails: [],
-      cartlength: 0
+      cartlength: 0,
+      id : 0,
+      isCol : false
     };
   },
   components: {
@@ -126,15 +127,15 @@ export default {
         paid += this.goodDetails[i].value * this.goodDetails[i].price;
       }
       return paid;
-    }
-  },
-  computed: {
-    ...mapGetters(
-        ["this.$store.state.carts"],
-        ["this.$store.state.todos"],
-        ["this.$store.state.collection"],
-        ["this.$store.state.ces"]
-    )
+    },
+   
+    // ...mapGetters(
+    //     ["this.$store.state.carts"],
+    //     ["this.$store.state.todos"],
+    //     ["this.$store.state.collection"],
+    //     ["this.$store.state.ces"]
+    // )
+
   },
   mounted() {
     if (this.$store.state.carts != undefined) {
@@ -142,8 +143,15 @@ export default {
     }
   },
   created() {
+    
     var _this = this;
     var id = this.$route.query.id;
+    this.id = parseInt(id);
+    for (var i = 0 ;i < this.$store.state.collections.length;i ++) {
+        if (this.id === this.$store.state.collections[i].id) {
+            this.isCol = true;
+        }
+    }
     axios.get("/static/ceshi.json").then(res => {
       for (var i = 0; i < res.data.data.home.length;i++){
         if (res.data.data.home[i].id == id ) {
@@ -151,7 +159,6 @@ export default {
         }
       }
     });
-
     axios.get("/static/ceshi.json").then(res => {
       for (var i = 0; i < res.data.data.set.length;i++){
         if (res.data.data.set[i].id == id ) {
@@ -159,23 +166,35 @@ export default {
         }
       }
     });
-   
   },
 
   methods: {
-    addCollection(index) {
-      this.$store.state.ces=!this.$store.state.ces
+    addCollection(goodDetail,index) {
+       this.isCol = !this.isCol;
        var data={
-           id:index.id,
-           img:index.homeImg,
-           name:index.homeName,
-           price:index.homePrice
-       }
-        this.$stor.dispatch("setGoods",data)
+            id:goodDetail.id,
+            img:goodDetail.homeImg,
+            name:goodDetail.homeName,
+            price:goodDetail.homePrice,
+            isCol:this.isCol
+        }
+      if (this.isCol) {
+        for (var i=0;i < this.$store.state.collections.length;i ++) {
+           if (this.$store.state.collections[i].id == data.id ) {
+               return;
+           }
+        }
+        this.$store.dispatch("setCollections",data);
+      }else {
+          for (var i=0;i < this.$store.state.collections.length;i ++) {
+           if (data.id == this.$store.state.collections[i].id) {
+               this.$store.state.collections.splice(i,1);
+           }
+        } 
+      }
     },
     // 点击按钮时，首先判断该商品是否在购物车已存在，如果存在则不再加入
     add: function(index) {
-        console.log(index)
       var idExist = this.$store.state.carts.find(todo => {
         return todo.id == index.id;
       });
@@ -201,29 +220,38 @@ export default {
         MessageBox("提示", "商品已存在购物车");
       }
     },
-    jia: function(index) {
+    addSum: function(index) {
       this.goodDetails[index].homeValue++;
   
     },
-    jian: function(index) {
+    subSum: function(index) {
       if (this.goodDetails[index].homeValue == 1) {
         this.goodDetails[index].homeValue = 1;
       } else {
         this.goodDetails[index].homeValue--;
       }
     },
+    goCart() {
+        this.$router.push({path:'cart'})
+    },
     //返回上一级
     fanhui: function() {
       this.$router.go(-1);
     },
-    pay: function(id,value) {
-        console.log(value)
+    pay: function(goodDetail) {
+        this.$store.state.payGoods=[];
+        var data = {
+          id:goodDetail.id,
+          name:goodDetail.homeName,
+          price:goodDetail.homePrice,
+          value:goodDetail.homeValue,
+          img:goodDetail.homeImg,
+          danx1uan: true
+        }
+        this.$store.state.payGoods.push(data);
+        console.log(this.$store.state.payGoods);
         this.$router.push({
             path:"pay",
-            query:{
-                id:id,
-                value:value
-            }
         })
         // Toast({
         //     message: `成功支付了${this.paid}元`,
@@ -260,9 +288,11 @@ export default {
 .peizhi {
     width: 90%;
     margin: auto;
+    font-size : 0.4rem;
     div{
         margin-bottom .5rem;
         margin-top .5rem;
+        
     }
     h3 {
         height: 2rem;
@@ -277,7 +307,7 @@ export default {
         display: block;
     }
     p {
-         height .55rem
+        
         color: #888;
     }
 }

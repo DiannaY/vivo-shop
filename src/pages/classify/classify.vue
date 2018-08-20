@@ -4,7 +4,7 @@
   <div class="calssify-con" >
         <div class="calssify-left" ref="wrapper">
             <ul class="calssify-left-ul" >
-                <li v-for="(list,index) in left" :key="index" @click="qiehuan(index)" :class="{active:index===classifyIndex}">
+                <li v-for="(list,index) in left" :key="index" @click="change(index)" :class="{active:index===classifyIndex}">
                     {{list.name}}
                 </li>
             </ul>
@@ -32,7 +32,7 @@ export default {
   data() {
     return {
       left: [],
-      rigth: [],
+      right: [],
       list: [],
       ce: [],
       key2: "",
@@ -50,7 +50,7 @@ export default {
   //       })
   //   },
   computed: {
-    ...mapGetters(["this.$store.state.sindex"])
+    // ...mapGetters(["this.$store.state.sindex"])
   },
   created() {
     var _this = this;
@@ -62,7 +62,7 @@ export default {
     });
   },
   methods: {
-    qiehuan(index) {
+    change(index) {
       var _this = this;
       _this.classifyIndex = index;
       _this.right = _this.list[index];

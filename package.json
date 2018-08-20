@@ -1,8 +1,8 @@
 {
-  "name": "apptwo",
+  "name": "vivo-shop",
   "version": "1.0.0",
   "description": "A Vue.js project",
-  "author": "Mynameisfwk <2239657654@qq.com>",
+  "author": "DiannaY",
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",
@@ -24,7 +24,6 @@
     "vux": "^2.7.2"
   },
   "devDependencies": {
-    "ansi-styles": "^3.2.1",
     "autoprefixer": "^7.1.2",
     "babel-core": "^6.22.1",
     "babel-loader": "^7.1.1",

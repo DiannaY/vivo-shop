@@ -1,7 +1,7 @@
 <template>
   <div class="detail" id="transition">
       <Detail-Header title="资讯详情"></Detail-Header>
-      <div class="detail-con" v-for="(list,index) in newsDetail">
+      <div class="detail-con" v-for="(list,index) in newsDetail" :key="index">
         <div class="detail-con-box" v-html="list.newsDetail"></div>
         <div class="details-box">
           <div class="stars">
@@ -40,15 +40,12 @@ export default {
   components: {
     DetailHeader
   },
-  computed: {
-    ...mapGetters(["this.$store.state.article"])
-  },
+  // computed: {
+  //   ...mapGetters(["this.$store.state.article"])
+  // },
   methods: {
     btn(list) {
       var date = new Date();
-      var fh1 = "-";
-      var fh2 = ":";
-      var fh3 = "";
       var year = date.getFullYear(); // 年
       var month = date.getMonth() + 1; // 月
       var day = date.getDate(); // 日
@@ -71,7 +68,7 @@ export default {
       //   minutes = "0" + minutes;
       // }
       var currentdate =
-        year + fh1 + month + fh1 + day + fh3 + hour + fh2 + minutes;
+        year + "-" + month + "-" + day + " " + hour + ':' + minutes;
 
       var idExist = this.$store.state.article.find(data => {
         return data.id == list.id;
@@ -149,8 +146,8 @@ export default {
         margin: auto 0.3rem;
         text-align: center;
         float: left;
-
         span {
+          line-height:1rem;
           padding-left: 0.1rem;
           font-size .36rem
         }

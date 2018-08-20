@@ -69,10 +69,10 @@ export default {
     article() {
       return this.$store.state.article;
     },
-    ...mapGetters(
-      ["this.$store.state.collections"],
-      ["this.$store.state.article"]
-    )
+    // ...mapGetters(
+    //   ["this.$store.state.collections"],
+    //   ["this.$store.state.article"]
+    // )
   },
   components: {
     CollectionHeader

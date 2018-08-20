@@ -9,7 +9,7 @@
             </div>
             <div class="order-box2" >
                <div v-show="nowIndex===0">
-                     <div v-for="(list,index) in orders" :key="index" class="orders">
+                     <div v-for="(list,index) in orders" :key="index" class="orders" @click="odetails(list)">
                         <div class="_order">
                             <p class="left">
                                 <i class="iconfont icon-qijiandian"></i>
@@ -46,6 +46,12 @@
                <div  v-show="nowIndex===1">
                    这里是待付款
                </div>
+               <div  v-show="nowIndex===2">
+                   这里是待收获
+               </div>
+               <div  v-show="nowIndex===3">
+                   这里是待评价
+               </div>
             </div>
         </div>
   </div>
@@ -59,6 +65,7 @@ export default {
   data() {
     return {
       nowIndex: 0,
+      len: this.$store.state.orders.length,
       t: [
         {
           item: "全部"
@@ -79,8 +86,15 @@ export default {
     OrderHeader
   },
   computed: {
-    orders() {
-      return this.$store.state.orders;
+    orders() {  
+     var newArr = [];
+     for (var i = this.$store.state.orders.length;i--;i>0) {
+         newArr.push(this.$store.state.orders[i]);
+     }
+     return newArr;
+        // return this.$store.state.orders.sort(function (ele,index) {
+        //     return index > 0;
+        // })
     }
   },
   methods: {
@@ -99,8 +113,10 @@ export default {
                 value:list.value
             }
         })
-        console.log(list)
     }
+  },
+  created() {
+      this.nowIndex = this.$route.query.index===undefined ? 0 : parseInt(this.$route.query.index) + 1;
   }
 };
 </script>

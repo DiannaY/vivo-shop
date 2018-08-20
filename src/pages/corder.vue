@@ -1,15 +1,16 @@
 <template>
-  <div>
-	  {{title}}
-  </div>
+	<div class="crack">
+			<Corder-Header title="定制手机"></Corder-Header>
+	</div>
+
 </template>
 <script>
+import CorderHeader from "../common/header";
 export default {
-  data() {
-	  return {
-		  title : '用户定制页面——待写'
-	  }
-  }
+	name : 'crack',
+	components : {
+		CorderHeader
+	}
 }
 </script>
 

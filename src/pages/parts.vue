@@ -8,15 +8,15 @@
         <div class="sort">
             <p @click="rise">价格升序</p>
             <p @click="drop">价格降序</p>
-            <p>销量优先</p>
+            <p @click="sale">销量优先</p>
         </div>
         <div class="lower">
             <div class="lower_list" v-for="(list,index) in PartsLower.PartsLower_data" :key="index" @click="goDetails(list.id)">
-            <img v-bind:src="list.homeImg">
-            <h2>{{list.homeName}}</h2>
-            <p>{{list.homeNametwo}}</p>
-            <div>￥{{list.homePrice}}</div>
-        </div>
+                <img v-bind:src="list.homeImg">
+                <h2>{{list.homeName}}</h2>
+                <p>{{list.homeNametwo}}</p>
+                <div>￥{{list.homePrice}}</div>
+            </div>
         </div>
     </div>
     
@@ -59,22 +59,27 @@ export default {
       });
     },
     btn(index) {
-      var _this = this;
-      _this.partsIndex = index;
-      _this.PartsLower = _this.list[index];
+      this.partsIndex = index;
+      this.PartsLower = this.list[index];
     },
     rise(){
-        var _this = this;
-        var data = _this.PartsLower.PartsLower_data;
+        var data = this.PartsLower.PartsLower_data;
         data.sort((a, b) => {
-            return a.homePrice > b.homePrice;
+            return parseInt(a.homePrice) > parseInt(b.homePrice);
         });
     },
     drop(){
-        var _this = this;
-        var data = _this.PartsLower.PartsLower_data;
+        var data = this.PartsLower.PartsLower_data;
         data.sort((a, b) => {
-            return a.homePrice < b.homePrice;
+            return parseInt(a.homePrice) < parseInt(b.homePrice);
+        });
+    },
+    sale() {
+        console.log('sale')
+        var data = this.PartsLower.PartsLower_data;
+        console.log(data);
+        data.sort((a, b) => {
+            return a.saleNum < b.saleNum;
         });
     }
   }

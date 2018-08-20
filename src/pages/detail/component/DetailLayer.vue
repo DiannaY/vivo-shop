@@ -9,7 +9,6 @@
                 <i class="iconfont icon-icon--"></i>
                 <p>支持以旧换新</p>
             </div>
-
             <div class="category-rigth">
                 <i class="iconfont icon-youjiantou"></i>
             </div>
@@ -178,8 +177,10 @@ export default {
 .fade-enter-active, .fade-leave-active {
     transition: all 0.3s ease;
 }
-
-.fade-enter, .fade-leave-active {
+.fade-enter, .fade-leave-to {
     transform: translateY(100%);
+}
+.fade-enter-to,.fade-leave {
+    transform : translateY(0%)
 }
 </style>

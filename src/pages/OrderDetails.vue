@@ -108,15 +108,7 @@ export default {
           _this.o1.push(data[i]);
         }
       }
-    });
-    axios.get("/static/ceshi.json").then(function(res) {
-      var data = res.data.data.list;
-      for (var i = 0; i < data.length; i++) {
-        if (data[i].id == id) {
-          _this.o1.push(data[i]);
-        }
-      }
-    });
+    })
   }
 };
 </script>
@@ -125,6 +117,7 @@ export default {
 .details-box {
     position: absolute;
     top: 1.45rem;
+    width:100%;
 }
 
 .details-success {

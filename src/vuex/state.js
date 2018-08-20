@@ -5,7 +5,8 @@ const state={
     orders:localStorage["orders"]?JSON.parse(localStorage["orders"]): [],
     todos:localStorage["todos"]?JSON.parse(localStorage["todos"]): [],
     address:localStorage["address"]?JSON.parse(localStorage["address"]): [],
-    nowIndex:0
+    nowIndex:0,
+    payGoods:localStorage['payGoods']?JSON.parse(localStrorage['payGoods']):[]
 }
 
 export default state

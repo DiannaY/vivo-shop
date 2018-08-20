@@ -21,21 +21,21 @@
           </p>
       </div>
 
-     <router-link class="container-order" to="/order" tag="div">
-         <div class="container-order-1">
+     <div class="container-order">
+         <router-link  to="/order" tag="div" class="container-order-1">
              <p class="left">我的订单</p>
              <p class="right">全部订单 ></p>
-         </div>
+         </router-link>
          <div class="container-order-2">
-             <p class="" v-for="(list,index) in container" :key="index">
+             <div v-for="(list,index) in container" :key="index" @click="goPage(index)">
                  <img :src="list.img">
-                 <span>{{list.name}}</span>
-             </p>
+                 <span >{{list.name}}</span>
+             </div>
          </div>
-     </router-link>
+     </div>
     
       <div class="container-con">
-          <router-link to="/MyCollection" class="con">
+          <router-link tag="div" to="/MyCollection" class="con">
                  <div class="con-left">
                   <i class="iconfont icon-collection"></i>
                   <span>我的收藏</span>
@@ -45,7 +45,7 @@
               </div>
           </router-link>
 
-            <router-link to="/address" class="con">
+        <router-link tag='div' to="/address" class="con">
                  <div class="con-left">
                   <i class="iconfont icon-gouwuche"></i>
                   <span>我的收货地址</span>
@@ -53,9 +53,9 @@
               <div class="con-rigth">
                   <i class="iconfont icon-youjiantou"></i>
               </div>
-          </router-link>
+        </router-link>
 
-           <router-link to="/cart" class="con">
+        <router-link tag="div" to="/cart" class="con">
                  <div class="con-left">
                   <i class="iconfont icon-gouwuche"></i>
                   <span>我的购物车</span>
@@ -65,7 +65,7 @@
               </div>
           </router-link>
 
-          <router-link to="/order" class="con">
+          <router-link tag="div" to="" class="con">
                  <div class="con-left">
                   <i class="iconfont icon-share_icon"></i>
                   <span>扫码分享</span>
@@ -74,15 +74,15 @@
                   <i class="iconfont icon-youjiantou"></i>
               </div>
           </router-link>
-          <a target="_blank" class="con">
+          <router-link tag="div" to="" class="con">
                  <div class="con-left">
                   <i class="iconfont icon-bangzhuguanyuwomen"></i>
-                  <span>关于我</span>
+                  <span>我的抽奖</span>
               </div>
               <div class="con-rigth">
                   <i class="iconfont icon-youjiantou"></i>
               </div>
-          </a>
+          </router-link>
       </div>
   </div>
 </template>
@@ -113,7 +113,7 @@ export default {
       }
   },
     computed:{
-      ...mapGetters(["this.$store.state.orders"]),
+    //   ...mapGetters(["this.$store.state.orders"]),
        jifeng(){
           var jifeng=0
           this.$store.state.orders.forEach(list => {
@@ -122,6 +122,16 @@ export default {
          return jifeng;
       }
   },
+  methods : {
+      goPage(index) {
+          this.$router.push({
+              path : 'order',
+              query : {
+                  index : index
+              }
+          })
+      }
+  }
 }
 </script>
 
@@ -159,7 +169,7 @@ export default {
         justify-content center
         align-items center
        
-        p{
+        div{
             width 25%
             display flex
             flex-direction column
@@ -233,16 +243,17 @@ export default {
     }
 
     .container-con {
-        margin-bottom 1.45rem
+        position : relative;
+        margin-bottom 1.45rem;
+        width:100%;
         .con {
             width: 100%;
             height: 1.41rem;
             background: #ffffff;
             border-bottom: 1px solid #f0f0f0;
-            display: block;
-
+            display: flex;
             .con-left {
-                float: left;
+                flex-grow : 1;
                 line-height: 1.3rem;
                 padding-left: 0.47rem;
 
@@ -255,7 +266,6 @@ export default {
                     padding-left: 0.1rem;
                 }
             }
-
             .con-rigth {
                 float: right;
                 line-height: 1.3rem;

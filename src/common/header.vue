@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-      <div class="header-left" @click="back">
+      <div class="header-left" @click="back(backnum)">
           <i class="iconfont icon-zuojiantou"></i>
       </div>
       <div class="header-in">{{title}}</div>
@@ -12,11 +12,12 @@
 export default {
   name:"header",
   props:[
-      "title"
+      "title",
+      "backnum"
   ],
   methods : {
-      back() {
-          this.$router.go(-1);
+      back(n=-1) {
+          this.$router.go(n);
       }
   }
 }

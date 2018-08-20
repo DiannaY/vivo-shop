@@ -1,11 +1,11 @@
 <template>
 <div>
-  <Success-Header title="结算"></Success-Header>
+  <Success-Header title="下单成功" :backnum="backnum"></Success-Header>
    <div class="success">
       <i class="iconfont icon-chenggong1"></i>
       <h2>购买成功</h2>
       <p>已收到您的货款,请留意
-        <router-link to="/order" >订单详情</router-link>
+        <router-link to="/order">我的订单</router-link>
         以及
         <router-link to="/order">物流信息</router-link>
         另外祝您生活愉快 感谢您的支持与厚爱
@@ -20,7 +20,7 @@ import SuccessHeader from '../common/header'
 export default {
   data(){
     return{
-      
+      backnum : -2
     }
   },
   components:{

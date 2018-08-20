@@ -1,14 +1,15 @@
 <template>
-  <div>
-	  {{title}}
-  </div>
+	<div class="crack">
+			<Crack-Header title="选购碎屏宝"></Crack-Header>
+	</div>
+
 </template>
 <script>
+import CrackHeader from "../common/header";
 export default {
-  data() {
-	  return {
-		  title : '碎屏宝商品页面-待写'
-	  }
-  }
+	name : 'crack',
+	components : {
+		CrackHeader
+	}
 }
 </script>

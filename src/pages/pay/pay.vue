@@ -3,40 +3,42 @@
         <Pay-Header title="结算"></Pay-Header>
         <div to="address" class="pay-address" >
              <p class="address-box">
-                <span class="name">收货人：myfwk</span>
-                <span class="phone">15255460858</span>
+                <span class="name">收货人：yang</span>
+                <span class="phone">66668888</span>
             </p>
             <p class="address-details">
-                收货地址：安徽省合肥市蜀山区金寨路立基大厦B座 中科大对面
+                收货地址：黑龙江省哈尔滨市南岗区
             </p>
+        </div> 
+        <div class="pay-goods-list">
+                <p class="title">清单列表</p>
+                <ul class="lists">
+                    <li v-for="(list,index) in payGoods" :key="index">
+                        <img :src="list.img">
+                        <div class="goods-info">
+                           
+                                <span class="name">{{list.name}}</span>
+                                <span class="num">x {{list.value}}</span>
+                                <p class="price">¥ {{list.price}}</p>
+                         
+                            <!-- <span>颜色：冰钻黑</span> -->
+                            
+                        </div>
+                    </li>
+                </ul>
         </div>
-        <div class="pay-shop" v-for="(list,index) in pay" :key="index">
-            <div class="pay-shop-list">
-                <p class="pay-shop-1">商品清单</p>
-                <p class="pay-shop-2">
-                    <img :src="list.homeImg">
-                    <p class="pay-shop-2-box">
-                        <span class="name">{{list.homeName}}<p>× {{$route.query.value}}</p></span>
-                        <!-- <span>颜色：冰钻黑</span> -->
-                        <span class="price">¥ {{list.homePrice}}</span>
-                    </p>
-                </p>
-            </div>
-
+        <div class="pay-shop">
             <div class="pay-shop-invoice">
                 <p class="pay-invoice-1">发票信息</p>
                 <div class="pay-invoice-2">
                     <div class="pay-invoice-2-2">
                         <div v-show="invoiceIndex===0">
                             <p>*请输入发票抬头:</p>
-                            <input type="text" id="input" v-model="list.text" placeholder="请输入发票信息">
-                            
+                            <input type="text" v-model="text" id="input" placeholder="请输入发票信息">      
                         </div>
                     </div>
-                   
                 </div>
             </div>
-
             <div class="pay-shop-fs">
                 <div class="pay-fs-1">支付方式</div>
                 <div class="pay-fs-2">
@@ -44,7 +46,7 @@
                         {{item.name}}
                     </div> -->
                     <div class="pay-fs-2-1" >
-                        <div v-for="(list,index) in lists" :class="{active:index===listIndex}" @click="btn(list.name,index)">{{list.name}}</div>
+                        <div v-for="(list,index) in lists" :key="index" :class="{active:index===listIndex}" @click="btn(list.name,index)">{{list.name}}</div>
                     </div>
                     <div class="pay-fs-2-2">
                        <div v-show="listIndex===0" class="pay-fs-2-2-1">支持支付宝支付、微信支付、银行卡支付、财付通等</div>
@@ -52,17 +54,15 @@
                        <div v-show="listIndex===2" class="pay-fs-2-2-3">货到再付款，支持现金交易</div>
                     </div>
                 </div>
-                
             </div>
-
             <div class="pay-shop-liuyan">
                 <p class="pay-liuyan-1">订单留言</p>
                 <div class="pay-liuyan-2">
-                    <textarea v-model="list.ly" rows="5" placeholder="限300字（若有特殊需求，请联系商城在线客服)" maxlength="300"></textarea>
-                    <p>商品总金额：¥{{$route.query.value*list.homePrice}}</p>
+                    <textarea v-model="ly" rows="5" placeholder="限300字（若有特殊需求，请联系商城在线客服)" maxlength="300"></textarea>
+                    <p>商品总金额：¥{{allPrice}}</p>
                     <p>运费：0.00</p>
                     <p>优惠：¥0.00</p>
-                    <p>赠送积分：{{$route.query.value*list.homePrice}}</p>
+                    <p>赠送积分：{{allPrice}}</p>
                    
                 </div>
             </div>
@@ -71,12 +71,143 @@
             <span>{{list.homeName}}</span> -->
 
             <div class="pay-shop-footer">
-                <p class="price">订单总金额：<span>¥{{$route.query.value*list.homePrice}}</span></p>
-                <a class="order" @click="addOrder(list,index)">立即结算</a>
+                <p class="price">订单总金额：<span>¥{{allPrice}}</span></p>
+                <a class="order" @click="addOrder(payGoods)">提交订单</a>
             </div>
         </div>
     </div>
 </template>
+
+<script>
+import { Toast,MessageBox } from "mint-ui";
+import { mapGetters, mapMutations } from "vuex";
+import PayHeader from "../../common/header";
+import axios from "axios";
+export default {
+  name: "pay",
+  data() {
+    return {
+      carts:this.$store.state.carts,
+      listIndex: 0,
+      invoiceIndex: 0,
+      pay: [],
+      payGoods : this.$store.state.payGoods,
+      lists: [
+        {
+          id: "1",
+          name: "在线支付"
+        },
+        {
+          id: "2",
+          name: "花呗分期"
+        },
+        {
+          id: "3",
+          name: "货到付款"
+        }
+      ],
+      text: "",
+      ly: ""
+    };
+  },
+  computed : {
+      allPrice(){
+          var prices = 0;
+          for (var i = 0 ;i < this.payGoods.length;i ++) {
+              prices += parseInt(this.payGoods[i].price*this.payGoods[i].value);
+          }
+          return prices;
+      }
+  },
+  components: {
+    PayHeader
+  },
+  //    computed: {
+  //         address() {
+  //         return this.$store.state.address;
+  //         },
+  //         ...mapGetters(
+  //             ["this.$store.state.address"],
+  //         )
+  //     },
+  methods: {
+      ...mapMutations['shanchu'],
+    btn(id, index) {
+      this.listIndex = index;
+    },
+    // invoiceClick(index) {
+    //   this.invoiceIndex = index;
+    // },
+    addOrder(payList,index) {
+      if (this.text == '') {
+        Toast({
+          message: "请输入发票抬头",
+          duration: 1000
+        });
+      } else {
+        for (var i = 0 ;i < payList.length;i ++) {
+           var data = {
+                id : payList[i].id,
+                name: payList[i].name,
+                price: payList[i].price,
+                text: this.text,
+                ly: this.ly,
+                img: payList[i].img,
+                // listname: this.lists[index].name,
+                value: payList[i].value
+            }
+            this.$store.dispatch('setOrders',data);
+        }
+        var _this = this;
+        var time = setInterval(function() {
+          _this.$router.push({
+            path: "success"
+          });
+          clearInterval(time);
+        }, 1000);
+      }
+    }
+  },
+  created() {
+      console.log(this.carts.length);
+    //   var len = this.carts.length;
+       var delArr = [];
+       this.carts.forEach((ele,index) => {
+           if (ele.danx1uan) {
+            this.payGoods.push(ele);
+            delArr.push(index);
+           }
+       })
+       for (var i = 0 ;i < delArr.length;i ++) {
+            this.carts.splice(0,1)
+            localStorage.setItem("carts",JSON.stringify(this.carts));
+       }
+        
+        // console.log(this.payGoods)
+        // var _this = this;
+        // var id = this.$route.query.id;
+        // var value = this.$route.query.value;
+        // axios.get("/static/ceshi.json").then(function(res) {
+        // for (var i = 0; i < res.data.data.set.length; i++) {
+        //     if (res.data.data.set[i].id == id) {
+        //     _this.pay.push(res.data.data.set[i]);
+        //     }
+        // }
+        // });
+        // axios.get("/static/ceshi.json").then(function(res) {
+        // for (var i = 0; i < res.data.data.home.length; i++) {
+        //     if (res.data.data.home[i].id == id) {
+        //     _this.pay.push(res.data.data.home[i]);
+        //     }
+        // }
+        // });
+        // console.log(this.pay);
+    
+  }
+};
+</script>
+
+
 <style lang="stylus" scoped>
 .active {
     border: 1px solid #444;
@@ -110,7 +241,46 @@
         font-size: 0.38rem;
     }
 }
-
+.pay-goods-list {
+    .title {
+         width: 100%;
+            height: 1.5rem;
+            line-height: 1.5rem;
+            border-bottom: 1px solid #eaeaea;
+            font-size: 0.4rem;
+            padding-left: 0.7rem;
+    }
+    ul {
+        li {
+            display : flex;
+            margin-bottom : 0.4rem;
+            background : #fff;
+            img {
+                width: 2.5rem;
+                height:2.5rem;
+            }
+            .goods-info {
+                width:100%;
+                .num {
+                    float:right;
+                    font-size: 0.4rem;
+                    margin-top: 0.65rem;
+                    height: 0.6rem;
+                }
+                .name {
+                    
+                    font-size:0.5rem;
+                    color : black;
+                }
+                .price {
+                    font-size : 0.5rem;
+                    color : red;
+                    margin-top : 0.3rem;
+                }
+            }
+        }
+    }
+}
 .pay-shop {
     width: 100%;
     margin-bottom: 1.5rem;
@@ -362,102 +532,6 @@
 </style>
 
 
-<script>
-import { Toast } from "mint-ui";
-import { mapGetters, mapMutations } from "vuex";
-import PayHeader from "../../common/header";
-import axios from "axios";
-export default {
-  name: "pay",
-  data() {
-    return {
-      listIndex: 0,
-      invoiceIndex: 0,
-      pay: [],
-      lists: [
-        {
-          id: "1",
-          name: "在线支付"
-        },
-        {
-          id: "2",
-          name: "花呗分期"
-        },
-        {
-          id: "3",
-          name: "货到付款"
-        }
-      ],
-      text: "",
-      ly: ""
-    };
-  },
-  components: {
-    PayHeader
-  },
-  //    computed: {
-  //         address() {
-  //         return this.$store.state.address;
-  //         },
-  //         ...mapGetters(
-  //             ["this.$store.state.address"],
-  //         )
-  //     },
-  methods: {
-    btn(id, index) {
-      this.listIndex = index;
-    },
-    invoiceClick(index) {
-      this.invoiceIndex = index;
-    },
-    addOrder(id, index) {
-      if (id.text == undefined) {
-        Toast({
-          message: "请输入发票抬头",
-          duration: 950
-        });
-      } else {
-        var data = {
-          id: id.id,
-          name: id.homeName,
-          price: id.homePrice,
-          text: id.text,
-          ly: id.ly,
-          img: id.homeImg,
-          listname: this.lists[index].name,
-          value: this.$route.query.value
-        };
-        this.$store.dispatch("setOrders", data);
-        var _this = this;
-        var time = setInterval(function() {
-          _this.$router.push({
-            path: "success"
-          });
-          clearInterval(time);
-        }, 1000);
-      }
-    }
-  },
-  created() {
-    var _this = this;
-    var id = this.$route.query.id;
-    var value = this.$route.query.value;
-    axios.get("/static/ceshi.json").then(function(res) {
-      for (var i = 0; i < res.data.data.set.length; i++) {
-        if (res.data.data.set[i].id == id) {
-          _this.pay.push(res.data.data.set[i]);
-        }
-      }
-    });
-    axios.get("/static/ceshi.json").then(function(res) {
-      for (var i = 0; i < res.data.data.home.length; i++) {
-        if (res.data.data.home[i].id == id) {
-          _this.pay.push(res.data.data.home[i]);
-        }
-      }
-    });
-  }
-};
-</script>
+
 
 
